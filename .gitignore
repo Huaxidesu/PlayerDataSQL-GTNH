@@ -37,3 +37,10 @@ manifest.mf
 
 # delombok
 */src/main/lombok
+
+# 本地文档与 AI 工作区（不进仓库）
+/doc/
+.workbuddy/
+.workbuddy-ai/
+.vscode/
+
