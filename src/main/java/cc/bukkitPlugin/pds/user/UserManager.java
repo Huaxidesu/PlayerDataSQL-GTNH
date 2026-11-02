@@ -264,7 +264,9 @@ public class UserManager extends AManager<PlayerDataSQL> implements IConfigModel
      */
     public User getUserData(CPlayer pPlayer, boolean pCloseInv, CommandSender pReciver) {
         if (!pPlayer.isOnline()) return null;
-        // if(!Bukkit.isPrimaryThread()) throw new IllegalStateException("请勿在异步线程调用此方法");
+        if (!Bukkit.isPrimaryThread()) {
+            Log.warn("getUserData 被异步线程调用(各模型 getData 要求主线程): " + Thread.currentThread().getName());
+        }
 
         if (pCloseInv) {
             Player tBPlayer = pPlayer.getPlayer();
@@ -310,8 +312,10 @@ public class UserManager extends AManager<PlayerDataSQL> implements IConfigModel
             for (IDataModel sModel : PDSAPI.getEnableModel()) {
                 byte[] tData = tDatas.get(sModel.getModelId().toLowerCase());
                 if (tData == null) {
-                    if (this.mPlugin.getConfigManager().mNoRestoreIfSQLDataNotExist) continue;
-                    tData = new byte[0];
+                    // 行内缺失该模块键：新玩家（整行不存在）或旧版本数据行升级后首次还原。
+                    // 不以空数据还原、也不清空实时数据，否则会把尚未入库的模块数据真实丢失
+                    // （如 1.2.21 行升级后 ServerUStats / MinecraftBackpack 键尚不存在）。
+                    continue;
                 }
 
                 try {
@@ -385,6 +389,10 @@ public class UserManager extends AManager<PlayerDataSQL> implements IConfigModel
 
     /**
      * 清理/清空玩家所有模块的数据
+     * <p>
+     * v1.3.0 起进服流程不再自动调用本方法（还原阶段改为跳过行内缺失的模块键，
+     * 避免清空尚未入库的实时数据），保留为管理命令与外部插件的公开入口。
+     * </p>
      * 
      * @param pPlayer
      *            玩家

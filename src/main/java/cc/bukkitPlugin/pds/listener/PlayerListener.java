@@ -48,9 +48,9 @@ public class PlayerListener extends AListener<PlayerDataSQL> {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent pEvent) {
-        if (!this.mPlugin.getConfigManager().mNoRestoreIfSQLDataNotExist) {
-            this.mUserMan.cleanPlayerData(pEvent.getPlayer());
-        }
+        // 进服时不再整体清空模块数据：restoreUser0 对行内缺失的模块键直接跳过，
+        // 旧版本数据行升级后首次进服时，尚未入库的实时数据（统计、个人背包槽等）得以保留。
+        // 依据见 doc/程序结构.md §9 升级迁移条目。
         Bukkit.getScheduler().runTaskAsynchronously(this.mPlugin, new LoadUserTask(pEvent.getPlayer(), this.mUserMan));
     }
 

@@ -8,5 +8,7 @@
 + 本插件部分结构参照自梦梦的 [PlayerSQL](https://github.com/caoli5288/PlayerSQL/)
 + 插件特点为备份数据模块化，数据表只有一张
 + 当前支持跨服的数据有：神秘时代4、饰品栏、匠魂、时装工坊、血魔法、超能力、舰娘、巫术、魔法艺术2 以及原版数据（包含成就、状态等完整属性）
++ GTNH 扩展：饰品栏 18 槽位、旅行背包（AdventureBackpack2）、独立背包模组（Minecraft-Backpack-Mod）、
+  ServerUtilities 个人统计与排行榜（在线时长、死亡、AFK、最后在线；队伍不跨服）
 + 可通过实现 [IDataModel](src/main/java/cc/bukkitPlugin/pds/api/IDataModel.java) 接口并注册来扩展更多 Mod 的跨服数据同步
 + 原作者构建历史参考：[Jenkins](https://ci.xjboss.net/job/PlayerDataSQL/)（已失效）
